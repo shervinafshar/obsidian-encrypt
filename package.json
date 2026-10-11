@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"test": "tsc -noEmit -skipLibCheck && node esbuild-test.config.mjs && node --test --enable-source-maps dist/test/*.mjs",
 		"version": "node version-bump.mjs",
 		"dev-tool-decrypt": "tsc -noEmit -skipLibCheck && node esbuild-tool-decrypt.config.mjs",
 		"build-tool-decrypt": "tsc -noEmit -skipLibCheck && node esbuild-tool-decrypt.config.mjs production",
