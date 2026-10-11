@@ -77,15 +77,15 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 
 	private replaceMarkersRecursive( node: Node, rlevel: number = 0 ) : Node[] {
 		
-		if ( node instanceof HTMLElement ){
+		if ( node.instanceOf( HTMLElement ) ){
 			for( const n of Array.from(node.childNodes) ){
-				var childNodes = this.replaceMarkersRecursive( n, rlevel+1 );
+				const childNodes = this.replaceMarkersRecursive( n, rlevel+1 );
 				n.replaceWith( ...childNodes );
 			}
 			return [node];
 		}
 
-		if ( node instanceof Text ){
+		if ( node.instanceOf( Text ) ){
 			
 			const text = node.textContent;
 
@@ -475,7 +475,7 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 			defaultHint,
 			/*showTextToEncrypt*/ true
 		);
-		pwModal.onClose = async () => {
+		pwModal.onClose = () => {
 			if ( !pwModal.resultConfirmed ){
 				return;
 			}
@@ -487,7 +487,7 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 			encryptable.text = textToEncrypt;
 			encryptable.hint = hint;
 
-			this.encryptSelection(
+			void this.encryptSelection(
 				editor,
 				encryptable,
 				pw,
@@ -630,7 +630,7 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 			defaultHint
 		);
 
-		pwModal.onClose = async () => {
+		const onPasswordModalClose = async () => {
 			if ( !pwModal.resultConfirmed ){
 				return;
 			}
@@ -643,7 +643,7 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 				encryptable.text = selectionText;
 				encryptable.hint = hint;
 
-				this.encryptSelection(
+				void this.encryptSelection(
 					editor,
 					encryptable,
 					pw,
@@ -672,6 +672,7 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 				
 			}
 		}
+		pwModal.onClose = () => void onPasswordModalClose();
 		pwModal.open();
 
 		return true;
@@ -714,7 +715,7 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 		} else {
 
 			const decryptModal = new DecryptModal(this.plugin.app, '🔓', decryptedText );
-			decryptModal.onClose = async () => {
+			const onDecryptModalClose = async () => {
 				editor.focus();
 				if (decryptModal.decryptInPlace) {
 					editor.setSelection(selectionStart, selectionEnd);
@@ -730,6 +731,7 @@ export default class FeatureInplaceEncrypt implements IMeldEncryptPluginFeature{
 					editor.replaceSelection(encodedText);
 				}
 			}
+			decryptModal.onClose = () => void onDecryptModalClose();
 			decryptModal.open();
 
 		}

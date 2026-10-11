@@ -208,7 +208,7 @@ export default class FeatureWholeNoteEncryptV2 implements IMeldEncryptPluginFeat
 			
 			try{
 				pwh = await pwm.openAsync();
-			}catch(e){
+			}catch{
 				return; // cancelled
 			}	
 		}
@@ -228,7 +228,7 @@ export default class FeatureWholeNoteEncryptV2 implements IMeldEncryptPluginFeat
 	}
 
 	onunload() {
-		this.plugin.app.workspace.detachLeavesOfType(EncryptedMarkdownView.VIEW_TYPE);
+		// the encrypted views are unloaded (and saved) by Obsidian
 	}
 
 	buildSettingsUi(containerEl: HTMLElement, saveSettingCallback: () => Promise<void>): void {

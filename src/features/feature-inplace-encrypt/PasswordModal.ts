@@ -135,7 +135,7 @@ export default class PasswordModal extends Modal {
 				tc.inputEl.on('keypress', '*', (ev, target) => {
 					if (
 						ev.key == 'Enter'
-						&& target instanceof HTMLInputElement
+						&& target.instanceOf( HTMLInputElement )
 						&& target.value.length > 0
 					) {
 						ev.preventDefault();
@@ -176,7 +176,7 @@ export default class PasswordModal extends Modal {
 			.addTextArea( cb=>{
 				cb.setValue( '' ).onChange( v => textToEncrypt = v );
 				cb.inputEl.rows = 5;
-				cb.inputEl.style.width = '100%';
+				cb.inputEl.addClass( 'meld-encrypt-full-width' );
 			})
 		;
 		if (!this.showTextToEncrypt){

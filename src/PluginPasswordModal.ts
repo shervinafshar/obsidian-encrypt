@@ -127,7 +127,7 @@ export default class PluginPasswordModal extends Modal {
 				tc.inputEl.on('keypress', '*', (ev, target) => {
 					if (
 						ev.key == 'Enter'
-						&& target instanceof HTMLInputElement
+						&& target.instanceOf( HTMLInputElement )
 						&& target.value.length > 0
 					) {
 						ev.preventDefault();

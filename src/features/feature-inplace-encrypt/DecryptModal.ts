@@ -52,7 +52,7 @@ export default class DecryptModal extends Modal {
 				cb
 					.setButtonText('Copy')
 					.onClick( evt =>{
-						navigator.clipboard.writeText( cTextArea.getValue() );
+						void navigator.clipboard.writeText( cTextArea.getValue() );
 						new Notice('Copied!');
 					})
 				;

@@ -65,7 +65,7 @@ export class CryptoHelperObsolete {
 			const utf8Decode = new TextDecoder();
 			const decryptedText = utf8Decode.decode(decryptedBytes);
 			return decryptedText;
-		} catch (e) {
+		} catch {
 			return null;
 		}
 	}

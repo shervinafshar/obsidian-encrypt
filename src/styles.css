@@ -26,3 +26,24 @@ div[data-type="meld-encrypted-view"] .view-content {
 }
 
 /* END FEATURE ENCRYPTED MD */
+
+/* COMMON */
+
+.meld-encrypt-busy {
+	cursor: wait;
+}
+
+.meld-encrypt-full-width {
+	width: 100%;
+}
+
+.meld-encrypt-external-file-paths {
+	white-space: pre;
+	width: 100%;
+}
+
+.meld-encrypt-external-file-paths-control {
+	width: 80%;
+}
+
+/* END COMMON */

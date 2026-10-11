@@ -66,7 +66,7 @@ export class UiHelper{
 					}
 				}
 				if (autoFocus){
-					setTimeout(() => tc.inputEl.focus(), 0);
+					window.setTimeout(() => tc.inputEl.focus(), 0);
 				}
 			} )
 		;

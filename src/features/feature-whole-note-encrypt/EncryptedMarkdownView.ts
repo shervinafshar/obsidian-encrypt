@@ -122,15 +122,11 @@ export class EncryptedMarkdownView extends MarkdownView {
 	}
 
 	private setViewBusy( busy: boolean ) {
-		if ( busy ) {
-			this.contentEl.style.cursor = 'wait';
-		} else {
-			this.contentEl.style.cursor = 'auto';
-		}
+		this.contentEl.toggleClass( 'meld-encrypt-busy', busy );
 	}
 
 	public detachSafely(){
-		this.save();
+		void this.save();
 		this.isSavingEnabled = false;
 		this.leaf.detach();
 	}
@@ -142,7 +138,7 @@ export class EncryptedMarkdownView extends MarkdownView {
 		}
 		
 		if (this.isSavingInProgress){
-			console.info( 'Saving is in progress, but forcing another save because the file is being unloaded' );
+			console.debug( 'Saving is in progress, but forcing another save because the file is being unloaded' );
 			// wait for the save to finish before saving again. If two saves
 			// overlap, the first one to finish resets isSavingInProgress and
 			// the other one writes the unencrypted view data to the file
@@ -197,7 +193,7 @@ export class EncryptedMarkdownView extends MarkdownView {
 		//console.debug('setViewData', {data, clear});
 
 		if ( this.file == null ) {
-			console.info( 'View data will not be set because file is null' )
+			console.debug( 'View data will not be set because file is null' )
 			return;
 		}
 
@@ -210,16 +206,16 @@ export class EncryptedMarkdownView extends MarkdownView {
 			return;
 		}
 
-		console.info( 'View is being set with already encoded data, trying to decode', {data} );
+		console.debug( 'View is being set with already encoded data, trying to decode' );
 		if (this.passwordAndHint == null){
 			console.error('passwordAndHint == null');
 			return;
 		}
 		const newEncoded = JsonFileEncoding.decode(data);
 		
-		FileDataHelper.decrypt( newEncoded, this.passwordAndHint.password ).then( decryptedText => {
+		void FileDataHelper.decrypt( newEncoded, this.passwordAndHint.password ).then( decryptedText => {
 			if ( decryptedText == null ){
-				console.info('View was being set with already encoceded data but the decryption failed, closing view');
+				console.debug('View was being set with already encoceded data but the decryption failed, closing view');
 				this.isSavingEnabled = false; // don't overwrite the data when we detach
 				this.leaf.detach();
 				return;
@@ -254,10 +250,9 @@ export class EncryptedMarkdownView extends MarkdownView {
 		//console.debug('setState done');
 	}
 
-	override save(clear?: boolean | undefined): Promise<void> {
-		console.debug('save', { clear });
+	override save(clear?: boolean): Promise<void> {
 		if ( this.isSavingInProgress ) {
-			console.info('Saving was prevented because another save is in progress, Obsidian will try again later if the content changed.');
+			console.debug('Saving was prevented because another save is in progress, Obsidian will try again later if the content changed.');
 			return Promise.resolve();
 		}
 
@@ -265,33 +260,33 @@ export class EncryptedMarkdownView extends MarkdownView {
 		return this.saveInProgress;
 	}
 
-	private async encryptAndSave(clear?: boolean | undefined): Promise<void> {
+	private async encryptAndSave(clear?: boolean): Promise<void> {
 
 		this.isSavingInProgress = true;
 		this.setViewBusy( true );
 		try{
 			
 			if (this.file == null){
-				console.info('Saving was prevented beacuse there is no file loaded in the view yet');
+				console.debug('Saving was prevented beacuse there is no file loaded in the view yet');
 				return;
 			}
 
 			if ( !ENCRYPTED_FILE_EXTENSIONS.includes( this.file.extension ) ){
-				console.info('Saving was prevented because the file is not an encrypted file');
+				console.debug('Saving was prevented because the file is not an encrypted file');
 				return;
 			}
 
 			if (!this.isSavingEnabled){
 				if (this.passwordAndHint == null){
-					console.info('Saving was prevented because the file was not yet loaded with a password');
+					console.debug('Saving was prevented because the file was not yet loaded with a password');
 				}else{
-					console.info('Saving was prevented because it was explicitly disabled');
+					console.debug('Saving was prevented because it was explicitly disabled');
 				}
 				return;
 			}
 
 			if (this.passwordAndHint == null){
-				console.info('Saving was prevented beacuse there is no password set');
+				console.debug('Saving was prevented beacuse there is no password set');
 				return;
 			}
 			
@@ -299,7 +294,7 @@ export class EncryptedMarkdownView extends MarkdownView {
 			
 			if ( JsonFileEncoding.isEncoded( unencryptedDataToSave ) ){
 				// data is already encrypted, protect it from being overwritten
-				console.info('Saving was prevented beacuse the data was already encoded but it was expected to not be');
+				console.debug('Saving was prevented beacuse the data was already encoded but it was expected to not be');
 				return;
 			}
 
@@ -308,7 +303,7 @@ export class EncryptedMarkdownView extends MarkdownView {
 				&& this.cachedUnencryptedData.length == unencryptedDataToSave.length
 				&& this.cachedUnencryptedData == unencryptedDataToSave
 			){
-				console.info('Saving was prevented because the data was not changed');
+				console.debug('Saving was prevented because the data was not changed');
 				return;
 			}
 
@@ -344,7 +339,7 @@ export class EncryptedMarkdownView extends MarkdownView {
 
 	async changePassword(): Promise<void> {
 		if (this.file == null){
-			console.info('Unable to change password beacuse there is no file loaded in the view yet');
+			console.debug('Unable to change password beacuse there is no file loaded in the view yet');
 			return;
 		}
 
@@ -368,7 +363,7 @@ export class EncryptedMarkdownView extends MarkdownView {
 			await this.save();
 
 			new Notice( 'Password changed' );
-		}catch(error){
+		}catch{
 			new Notice( 'Password wasn\'t changed' );
 		}
 	}

@@ -95,7 +95,6 @@ export default class MeldEncryptSettingsTab extends PluginSettingTab {
 				.addOption( SessionPasswordService.LevelExternalFile, 'External File')
 					.setValue( this.settings.rememberPasswordLevel )
 					.onChange( async value => {
-						console.debug( 'rememberPasswordLevelSetting.onChange', { value } );
 						this.settings.rememberPasswordLevel = value;
 						await this.plugin.saveSettings();
 						SessionPasswordService.setLevel( this.settings.rememberPasswordLevel );
@@ -136,8 +135,7 @@ export default class MeldEncryptSettingsTab extends PluginSettingTab {
 					})
 				;
 				text.inputEl.placeholder = 'Enter one relative path per line';
-				text.inputEl.style.whiteSpace = 'pre';
-				text.inputEl.style.width = '100%';
+				text.inputEl.addClass( 'meld-encrypt-external-file-paths' );
 				text.inputEl.rows = 4;
 			})
 			.addButton( btn => {
@@ -158,7 +156,7 @@ export default class MeldEncryptSettingsTab extends PluginSettingTab {
 				;
 			})
 		;
-		extFilePathsSetting.controlEl.style.width = '80%';
+		extFilePathsSetting.controlEl.addClass( 'meld-encrypt-external-file-paths-control' );
 
 		updateRememberPasswordSettingsUi();
 

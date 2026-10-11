@@ -47,14 +47,14 @@ export default class MeldEncrypt extends Plugin {
 		});
 
 		// load features
-		this.enabledFeatures.forEach(async f => {
+		for ( const f of this.enabledFeatures ) {
 			await f.onload( this, this.settings );
-		});
+		}
 
 	}
 	
 	override onunload() {
-		this.enabledFeatures.forEach(async f => {
+		this.enabledFeatures.forEach( f => {
 			f.onunload();
 		});
 		super.onunload();
@@ -80,6 +80,7 @@ export default class MeldEncrypt extends Plugin {
 		}
 
 		this.settings = Object.assign(
+			{},
 			DEFAULT_SETTINGS,
 			await this.loadData()
 		);

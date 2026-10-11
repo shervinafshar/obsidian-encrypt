@@ -43,7 +43,7 @@ export class JsonFileEncoding {
 		try {
 			JSON.parse( text );
 			return true;
-		} catch ( error ) {
+		} catch {
 			return false;
 		}
 	}
