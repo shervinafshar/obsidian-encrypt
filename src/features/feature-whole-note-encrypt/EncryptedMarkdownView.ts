@@ -235,10 +235,20 @@ export class EncryptedMarkdownView extends MarkdownView {
 			await this.save(); // save before preview
 		}
 		this.isSavingEnabled = false;
+
+		// this.data holds the encoded file contents and switching modes loads
+		// it into the editor, which leaves the encoded data in the undo history.
+		// Swap in the unencrypted data while the state is being set.
+		const encodedData = this.data;
+		const unencryptedData = this.cachedUnencryptedData;
+		this.data = unencryptedData;
 		try{
 			await super.setState(state, result);
 			super.setViewData(this.cachedUnencryptedData, false);
 		}finally{
+			if ( this.data === unencryptedData ){
+				this.data = encodedData;
+			}
 			this.isSavingEnabled = true;
 		}
 		//console.debug('setState done');
